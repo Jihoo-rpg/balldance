@@ -128,6 +128,7 @@ button{font-family:inherit;color:inherit}
 .eb.on{background:var(--hot);color:#1a1206;border-color:transparent}
 .eb:disabled{opacity:.35;cursor:default}
 .eb.mono{font-family:var(--mono);font-size:13px}
+.spd{max-width:300px}.eb.sp{min-width:44px;height:34px;padding:0 6px;font-size:12px}
 .keys{width:100%;text-align:center;font-size:11px;color:var(--muted);line-height:1.6}
 .keys kbd{font-family:var(--mono);border:1px solid var(--line);border-radius:4px;padding:0 4px}
 .toast{position:absolute;left:50%;top:calc(96px + env(safe-area-inset-top,0px));transform:translateX(-50%);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:8px 16px;font-size:14px;pointer-events:none;white-space:nowrap}
@@ -198,7 +199,7 @@ button{font-family:inherit;color:inherit}
       <div class="row"><button type="button" class="eb" data-d="240">↙<small>240</small></button><button type="button" class="eb" data-d="300">↘<small>300</small></button></div></div>
     <div class="grp"><small>선택한 칸</small>
       <div class="row"><button type="button" class="eb" id="edTw">회전 반전</button></div>
-      <div class="row"><button type="button" class="eb mono" data-s="0.5">×0.5</button><button type="button" class="eb mono" data-s="1">×1</button><button type="button" class="eb mono" data-s="1.5">×1.5</button><button type="button" class="eb mono" data-s="2">×2</button></div></div>
+      <div class="row spd"><button type="button" class="eb mono sp" data-s="0.5">×0.5</button><button type="button" class="eb mono sp" data-s="1">×1</button><button type="button" class="eb mono sp" data-s="1.5">×1.5</button><button type="button" class="eb mono sp" data-s="2">×2</button><button type="button" class="eb mono sp" data-s="3">×3</button><button type="button" class="eb mono sp" data-s="4">×4</button><button type="button" class="eb mono sp" data-s="5">×5</button><button type="button" class="eb mono sp" data-s="6">×6</button><button type="button" class="eb mono sp" data-s="7">×7</button><button type="button" class="eb mono sp" data-s="8">×8</button><button type="button" class="eb mono sp" data-s="9">×9</button><button type="button" class="eb mono sp" data-s="10">×10</button></div></div>
     <div class="grp"><small>칸 선택</small>
       <div class="row"><button type="button" class="eb" id="edPrev" aria-label="이전 칸">‹</button><button type="button" class="eb" id="edNext" aria-label="다음 칸">›</button><button type="button" class="eb" id="edEnd">끝</button></div></div>
     <div class="grp"><small>빠르게 만들기</small>
@@ -211,7 +212,7 @@ button{font-family:inherit;color:inherit}
         <button type="button" class="eb mono" data-st=".75,.25,.75,.25,.75,.25,.75,.25">¾¼ ×4</button>
         <button type="button" class="eb mono" data-st="1.5,.5,1.5,.5">1½½ ×2</button>
       </div></div>
-    <div class="keys"><kbd>W A S D</kbd> 상하좌우 · <kbd>Q E Z C</kbd> 대각선 · <kbd>Shift</kbd>+대각선 = 60° · <kbd>T</kbd> 회전 반전 · <kbd>1</kbd>–<kbd>4</kbd> 속도 · <kbd>Backspace</kbd> 지우기 · <kbd>[ ]</kbd> 칸 선택 · <kbd>Ctrl</kbd>+<kbd>Z</kbd> 되돌리기 · <kbd>R</kbd> 리듬 녹음 (녹음 중엔 아무 키나 탭) · <kbd>Enter</kbd> 테스트 · 칸을 눌러 선택, 끌어서 이동, 휠로 확대</div>
+    <div class="keys"><kbd>W A S D</kbd> 상하좌우 · <kbd>Q E Z C</kbd> 대각선 · <kbd>Shift</kbd>+대각선 = 60° · <kbd>T</kbd> 회전 반전 · <kbd>1</kbd>–<kbd>0</kbd> 속도(×0.5~×10) · <kbd>Backspace</kbd> 지우기 · <kbd>[ ]</kbd> 칸 선택 · <kbd>Ctrl</kbd>+<kbd>Z</kbd> 되돌리기 · <kbd>R</kbd> 리듬 녹음 (녹음 중엔 아무 키나 탭) · <kbd>Enter</kbd> 테스트 · 칸을 눌러 선택, 끌어서 이동, 휠로 확대</div>
   </div>
   <div class="toast" id="edToast" hidden></div>
   <div class="sharebox" id="edShareBox" hidden>
@@ -292,8 +293,9 @@ const m360=x=>((x%360)+360)%360;
 function buildLevel(w){
   const toks=[];let mod={};
   let pp=w.pat;while(/\(([^()]*)\)(\d+)/.test(pp))pp=pp.replace(/\(([^()]*)\)(\d+)/g,(m,a,n)=>a.repeat(+n));
-  for(const ch of pp){
+  for(let ci=0;ci<pp.length;ci++){const ch=pp[ci];
     if(ch==='*'){mod.tw=1;continue}
+    if(ch==='{'){const e=pp.indexOf('}',ci);const v=parseFloat(pp.slice(ci+1,e));if(v>0)mod.sp=v;ci=e;continue}
     if('>^<_'.includes(ch)){mod.sp={'>':2,'^':1.5,'<':1,'_':0.5}[ch];continue}
     const d=DIR[ch];if(d===undefined)continue;
     toks.push({dir:d,tw:mod.tw,sp:mod.sp});mod={};
@@ -351,7 +353,7 @@ function sched(){
   const w=G.world,L=G.lvl,horizon=AC.currentTime+.16,stopAt=L.end+COUNT*(60/w.bpm);
   while(G.startAt+M.t<horizon&&M.t<stopAt){
     while(M.seg+1<L.segs.length&&L.segs[M.seg+1].t<=M.t+1e-6){M.seg++;if(L.segs[M.seg].t>M.t-1e-6){M.t=L.segs[M.seg].t;M.step=0}}
-    const beat=L.segs[M.seg].beat,at=G.startAt+M.t,s=M.step%16,intro=M.t<G.introEnd-1e-4;
+    let beat=L.segs[M.seg].beat;while(beat<.24)beat*=2;const at=G.startAt+M.t,s=M.step%16,intro=M.t<G.introEnd-1e-4;
     if(at>AC.currentTime-.01){
       if(s===0){M.bar++;M.deg=w.prog[M.bar%w.prog.length];if(!intro)pad(at,chord(w,M.deg).map(m=>mtof(m)),beat*4)}
       if(w.kick[s]==='x')kick(at);
@@ -501,8 +503,8 @@ $('newMap').addEventListener('click',()=>openEditor({id:'m'+Date.now().toString(
 const LET={};for(const k in DIR)LET[DIR[k]]=k;
 const SPC={2:'>',1.5:'^',1:'<',0.5:'_'};
 function patToToks(pat){let pp=pat;while(/\(([^()]*)\)(\d+)/.test(pp))pp=pp.replace(/\(([^()]*)\)(\d+)/g,(m,a,n)=>a.repeat(+n));
-  const out=[];let mod={};for(const ch of pp){if(ch==='*'){mod.tw=1;continue}if('>^<_'.includes(ch)){mod.sp={'>':2,'^':1.5,'<':1,'_':.5}[ch];continue}const d=DIR[ch];if(d===undefined)continue;out.push({dir:d,tw:mod.tw,sp:mod.sp});mod={}}return out}
-function toksToPat(t){return t.map(k=>(k.tw?'*':'')+(k.sp?SPC[k.sp]:'')+LET[k.dir]).join('')}
+  const out=[];let mod={};for(let ci=0;ci<pp.length;ci++){const ch=pp[ci];if(ch==='*'){mod.tw=1;continue}if(ch==='{'){const e=pp.indexOf('}',ci);const v=parseFloat(pp.slice(ci+1,e));if(v>0)mod.sp=v;ci=e;continue}if('>^<_'.includes(ch)){mod.sp={'>':2,'^':1.5,'<':1,'_':.5}[ch];continue}const d=DIR[ch];if(d===undefined)continue;out.push({dir:d,tw:mod.tw,sp:mod.sp});mod={}}return out}
+function toksToPat(t){return t.map(k=>(k.tw?'*':'')+(k.sp?(SPC[k.sp]||'{'+k.sp+'}'):'')+LET[k.dir]).join('')}
 function mapWorld(m){return Object.assign({},W[m.style],{name:m.name||'내 맵',bpm:m.bpm,pat:m.pat,sub:'내 맵',diff:0})}
 let E=null;
 function edMap(){return{id:E.id,name:$('edName').value.trim()||'내 맵',bpm:E.bpm,style:E.style,pat:toksToPat(E.toks)}}
@@ -519,8 +521,8 @@ function openEditor(m){
 function edRefresh(){
   E.lvl=buildLevel(mapWorld(edMap()));const L=E.lvl,b=60/E.bpm;
   let mg=1e9;for(let k=2;k<=L.n;k++)mg=Math.min(mg,L.tiles[k].t-L.tiles[k-1].t);
-  const info=$('edInfo');info.textContent=`${L.n}칸 · ${(L.end-L.tiles[0].t).toFixed(1)}초`+(L.n>1?` · 최소 간격 ${Math.round(mg*1000)}ms`:'')+(mg<.08?' · 너무 빨라요':'');
-  info.classList.toggle('warn',mg<.08);
+  const info=$('edInfo');info.textContent=`${L.n}칸 · ${(L.end-L.tiles[0].t).toFixed(1)}초`+(L.n>1?` · 최소 간격 ${Math.round(mg*1000)}ms`:'');
+  
   const t=E.sel>0?E.toks[E.sel-1]:null;
   $('edTw').disabled=!t;$('edTw').classList.toggle('on',!!(t&&t.tw));
   document.querySelectorAll('#editor [data-s]').forEach(el=>{el.disabled=!t;el.classList.toggle('on',!!(t&&t.sp===+el.dataset.s))});
@@ -587,7 +589,7 @@ function edTest(auto){if(REC)recStop();if(!E.toks.length){toast('칸을 하나 �
 function encodeMap(m){return'BD1:'+btoa(unescape(encodeURIComponent(JSON.stringify({n:m.name,b:m.bpm,s:m.style,p:m.pat}))))}
 function decodeMap(code){
   const raw=code.trim().replace(/^BD1:/,'');const o=JSON.parse(decodeURIComponent(escape(atob(raw))));
-  if(typeof o.p!=='string'||!/^[RTEHUGQLZJDNCa-k*>^<_()0-9 ]*$/.test(o.p))throw 0;
+  if(typeof o.p!=='string'||!/^[RTEHUGQLZJDNCa-k*>^<_()0-9{}. ]*$/.test(o.p))throw 0;
   const b=Math.round(+o.b);if(!(b>=40&&b<=300))throw 0;
   return{name:String(o.n||'받은 맵').slice(0,24),bpm:b,style:Math.max(0,Math.min(11,o.s|0)),pat:o.p};
 }
@@ -619,7 +621,7 @@ function edKey(e){
   else if(c==='KeyT')edTw();
   else if(c==='KeyR')recStart();
   else if((e.ctrlKey||e.metaKey)&&c==='KeyZ'){e.preventDefault();edUndo()}
-  else if(c==='Digit1')edSp(.5);else if(c==='Digit2')edSp(1);else if(c==='Digit3')edSp(1.5);else if(c==='Digit4')edSp(2);
+  else if(c==='Digit1')edSp(.5);else if(c==='Digit2')edSp(1);else if(c==='Digit3')edSp(1.5);else if(c==='Digit4')edSp(2);else if(c==='Digit5')edSp(3);else if(c==='Digit6')edSp(4);else if(c==='Digit7')edSp(5);else if(c==='Digit8')edSp(6);else if(c==='Digit9')edSp(8);else if(c==='Digit0')edSp(10);
   else if(c==='BracketLeft')edSel(E.sel-1);else if(c==='BracketRight')edSel(E.sel+1);
   else if(c==='Home')edSel(0);else if(c==='End')edSel(E.toks.length);
   else if(c==='Enter'){e.preventDefault();edTest(false)}
