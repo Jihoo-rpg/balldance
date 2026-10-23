@@ -137,7 +137,8 @@ button{font-family:inherit;color:inherit}
     </div>
     <p class="note" id="resNote"></p>
     <div class="btns">
-      <button type="button" class="pri" id="bRetry">다시 하기</button>
+      <button type="button" class="pri" id="bCp">체크포인트부터</button>
+      <button type="button" class="pri" id="bRetry">처음부터</button>
       <button type="button" id="bNext">다음 월드</button>
       <button type="button" id="bMenu">월드 목록</button>
     </div>
@@ -151,42 +152,42 @@ const MAJ=[0,2,4,5,7,9,11],MIN=[0,2,3,5,7,8,10],DOR=[0,2,3,5,7,9,10],LYD=[0,2,4,
 const COUNT=4;
 // Pattern: direction letters; '*' = twirl (reverse spin) at that tile; '>' x2, '^' x1.5, '<' x1, '_' x0.5 speed from that tile.
 const W=[
- {name:'첫 궤도',sub:'곧은 길과 첫 모퉁이',bpm:110,diff:1,c:['#1b1530','#46284f','#f4dcb0','#ff9f6e','#ff7a4d','#7cc8ff'],fx:'dots',
+ {name:'첫 궤도',sub:'곧은 길과 첫 모퉁이',bpm:100,diff:1,c:['#1b1530','#46284f','#f4dcb0','#ff9f6e','#ff7a4d','#7cc8ff'],fx:'dots',
   root:60,scale:MAJ,prog:[0,5,3,4],kick:'x.......x.......',snare:'....x.......x...',hat:'..x...x...x...x.',bass:'x.......x.......',
   pat:'(R)8 RRRRUURR RRRRDDRR (RU)2RR (RD)2RR RRRRUUUU RRRRDDDD RRURRDRR (R)8'},
- {name:'소금 사막',sub:'대각선 45도',bpm:120,diff:1,c:['#2a1d16','#5a3a22','#fff0d6','#ffd27a','#ff6b3d','#9fe3ff'],fx:'waves',
+ {name:'소금 사막',sub:'대각선 45도',bpm:108,diff:1,c:['#2a1d16','#5a3a22','#fff0d6','#ffd27a','#ff6b3d','#9fe3ff'],fx:'waves',
   root:62,scale:MIXO,prog:[0,6,3,0],kick:'x.....x...x.....',snare:'....x.......x...',hat:'x.x.x.x.x.x.x.x.',bass:'x..x..x...x..x..',
   pat:'(R)8 (RE)4 (R)4 (RC)4 RRRREEEE RRRRCCCC (EC)4 RR(*E*R)4 RRRR *R(*C*R)4*R (R)8'},
- {name:'유리 숲',sub:'계단을 타는 8분음표',bpm:128,diff:2,c:['#0d221f','#14403a','#c9fff0','#6effc6','#ffb84d','#8ef0ff'],fx:'rays',
+ {name:'유리 숲',sub:'계단을 타는 8분음표',bpm:114,diff:2,c:['#0d221f','#14403a','#c9fff0','#6effc6','#ffb84d','#8ef0ff'],fx:'rays',
   root:64,scale:LYD,prog:[0,1,5,4],kick:'x.......x..x....',snare:'....x.......x..x',hat:'..xx..xx..xx..xx',bass:'x...x...x...x...',
   pat:'(R)8 (RU)2(RD)2 RR (*U*R)4 RRRR *R(*D*R)4*R RRRR (RE)2(RC)2 (*U*R)6 RR *R(*D*R)6*R (R)8'},
- {name:'회전목마',sub:'뒤집히는 회전',bpm:134,diff:2,c:['#2a0f2a','#4f1a45','#ffd6f0','#ff7ac8','#ffcf5a','#9ab8ff'],fx:'spiral',
+ {name:'회전목마',sub:'뒤집히는 회전',bpm:120,diff:2,c:['#2a0f2a','#4f1a45','#ffd6f0','#ff7ac8','#ffcf5a','#9ab8ff'],fx:'spiral',
   root:65,scale:MAJ,prog:[0,3,4,0],kick:'x...x...x...x...',snare:'................',hat:'..x...x...x...x.',bass:'x.x...x.x...x...',
   pat:'(R)8 RRRU*RRRD*RRRU*RRRD*RRRR (RU*RU*)4 (RD*RD*)4 RR (*U*R)4(*E*R)4 RR *R(*D*R)4(*C*R)4*R (*E*C)6 RR(R)6'},
- {name:'조수 간만',sub:'16분음표 첫 등장',bpm:140,diff:3,c:['#08162e','#0f3359','#cfe8ff','#5ab8ff','#ff9a62','#6ff0e0'],fx:'waves',
+ {name:'조수 간만',sub:'16분음표 첫 등장',bpm:124,diff:3,c:['#08162e','#0f3359','#cfe8ff','#5ab8ff','#ff9a62','#6ff0e0'],fx:'waves',
   root:62,scale:DOR,prog:[0,3,6,4],kick:'x.......x.x.....',snare:'....x.......x...',hat:'x.xxx.xxx.xxx.xx',bass:'x..x....x..x.x..',
   pat:'(R)8 (*U*R)4 RR (QR)2 RR (RZ)2 RR (*U*R)2(*Q*R)2(*U*R)2 RR *R(*D*R)2(*Z*R)2(*D*R)2*R RR (EC)4 RR (*Q*R)4 RR (R)8'},
- {name:'기계 심장',sub:'빨라지는 박동',bpm:146,diff:3,c:['#1a1a1d','#33302b','#e8dcc4','#ff5a36','#ff5a36','#c4d7e8'],fx:'grid',
+ {name:'기계 심장',sub:'빨라지는 박동',bpm:128,diff:3,c:['#1a1a1d','#33302b','#e8dcc4','#ff5a36','#ff5a36','#c4d7e8'],fx:'grid',
   root:57,scale:PHRY,prog:[0,1,0,6],kick:'x...x...x...x...',snare:'....x.......x...',hat:'xxxxxxxxxxxxxxxx',bass:'xx.xxx.xxx.xxx.x',
   pat:'(R)8 ^(R)8 (*U*R)4 <RRRR >(R)16 <(*E*R)4 RR ^*R(*D*R)4*R (RU)4 >(R)8 <R(*Q*R)4 RR (R)8'},
- {name:'삼박 해안',sub:'셋잇단 연타',bpm:148,diff:3,c:['#0a2430','#1d5560','#fff6dc','#ffe07a','#ff8f6b','#7affd9'],fx:'dots',
+ {name:'삼박 해안',sub:'셋잇단 연타',bpm:126,diff:3,c:['#0a2430','#1d5560','#fff6dc','#ffe07a','#ff8f6b','#7affd9'],fx:'dots',
   root:67,scale:MAJ,prog:[0,4,5,3],kick:'x.....x.....x...',snare:'....x.......x...',hat:'x..x..x..x..x..x',bass:'x.....x.....x...',
   pat:'(R)8 (RH)4 RR (RN)4 RR (N*H*)4 RR *R(H*N*)4*R RR (N*H*)6 RR (*U*R)4 (N*H*)4 RR *R(*Z*R)2*R RR(R)6'},
- {name:'번개 계단',sub:'번개 같은 16분 계단',bpm:156,diff:4,c:['#14102a','#2b1d5e','#fffbd1','#fff04d','#ff6a8a','#66e0ff'],fx:'rays',
+ {name:'번개 계단',sub:'번개 같은 16분 계단',bpm:134,diff:4,c:['#14102a','#2b1d5e','#fffbd1','#fff04d','#ff6a8a','#66e0ff'],fx:'rays',
   root:59,scale:MIN,prog:[0,5,2,6],kick:'x..x..x.x..x..x.',snare:'....x.......x...',hat:'.x.x.x.x.x.x.x.x',bass:'x.xx.xx.x.xx.xx.',
   pat:'(R)8 (*U*R)6 *R(*D*R)6*R (*Q*R)4 RR *R(*Z*R)4*R (*E*C)8 RR (*U*R)2(*Q*R)2(*U*R)2(*Q*R)2 RR ^(R)8 <*R(*D*R)4*R (R)6'},
- {name:'심해',sub:'느리다가 폭발하는 심해',bpm:124,diff:4,c:['#020a14','#06202e','#8fd3e8','#2fe6c8','#ffb36b','#3fd0ff'],fx:'bubbles',
+ {name:'심해',sub:'느리다가 폭발하는 심해',bpm:110,diff:4,c:['#020a14','#06202e','#8fd3e8','#2fe6c8','#ffb36b','#3fd0ff'],fx:'bubbles',
   root:50,scale:MIN,prog:[0,5,3,4],kick:'x.........x.....',snare:'........x.......',hat:'....x.......x...',bass:'x.......x.......',
   pat:'(R)8 (QR)4 RR (RZ)4 R _(R)4 <(*Q*R)6 RR *R(*Z*R)6*R RR >(*U*R)4 <RR (N*H*)4 RR (*Q*R)8 RR (R)6'},
- {name:'네온 고속도로',sub:'두 배속 질주',bpm:168,diff:5,c:['#0a0518','#22093a','#ffb3f3','#00f0ff','#ff3fa4','#00f0ff'],fx:'grid',
+ {name:'네온 고속도로',sub:'두 배속 질주',bpm:140,diff:5,c:['#0a0518','#22093a','#ffb3f3','#00f0ff','#ff3fa4','#00f0ff'],fx:'grid',
   root:57,scale:MIN,prog:[0,6,5,6],kick:'x...x...x...x...',snare:'....x.......x...',hat:'..x...x...x...x.',bass:'.xx..xx..xx..xx.',
   pat:'(R)8 >(R)16 <(*U*R)4 >(*U*R)4 <RR *R(*D*R)4*R >*R(*D*R)4*R <RR (*Q*R)6 RR >(R)8(EC)4 <(*E*C)8 RR (R)8'},
- {name:'소용돌이',sub:'셋잇단 1.5배속 폭풍',bpm:178,diff:5,c:['#160a1f','#3a1240','#ffe2c4','#ff7a4a','#ffd04d','#b48cff'],fx:'spiral',
+ {name:'소용돌이',sub:'셋잇단과 16분의 폭풍',bpm:146,diff:5,c:['#160a1f','#3a1240','#ffe2c4','#ff7a4a','#ffd04d','#b48cff'],fx:'spiral',
   root:60,scale:DOR,prog:[0,2,3,4],kick:'x..x....x..x....',snare:'....x..x....x...',hat:'x.x.x.x.x.x.x.x.',bass:'x..x..x..x..x.x.',
-  pat:'(R)8 (N*H*)6 RR *R(H*N*)5H*NR RR (*U*R)2(*Q*R)2 *R(*D*R)2(*Z*R)2*R (*E*C)8 RR (N*H*)4 R(*U*R)4(*Q*R)4 RR ^(N*H*)4 <RR *R(*Z*R)6*R (R)6'},
- {name:'쌍성의 끝',sub:'모든 것, 192 BPM',bpm:192,diff:5,c:['#05050c','#1a1430','#ffffff','#ffd36b','#ff6a3d','#6ab8ff'],fx:'stars',
+  pat:'(R)8 (N*H*)6 RR *R(H*N*)5H*NR RR (*U*R)2(*Q*R)2 *R(*D*R)2(*Z*R)2*R (*E*C)8 RR (N*H*)4 R(*U*R)4(*Q*R)4 RR (N*H*)4 RR *R(*Z*R)6*R (R)6'},
+ {name:'쌍성의 끝',sub:'지금까지의 모든 것',bpm:156,diff:5,c:['#05050c','#1a1430','#ffffff','#ffd36b','#ff6a3d','#6ab8ff'],fx:'stars',
   root:62,scale:MIN,prog:[0,5,2,6],kick:'x...x...x...x.x.',snare:'....x.......x...',hat:'xxxxxxxxxxxxxxxx',bass:'x.xx.xx.x.xx.xxx',
-  pat:'(R)8 (*U*R)6 *R(*D*R)6*R (*Q*R)6 RR *R(*Z*R)6*R (N*H*)6 RR >(R)16 (*U*R)4 <(*E*C)8 RR (*U*R)2(*Q*R)2(*U*R)2(*Q*R)2 *R(*D*R)2(*Z*R)2(*D*R)2(*Z*R)2*R ^(N*H*)6 <RR >(*U*R)6 <*R(*Z*R)8*R (R)8'},
+  pat:'(R)8 (*U*R)6 *R(*D*R)6*R (*Q*R)6 RR *R(*Z*R)6*R (N*H*)6 RR >(R)16 (*U*R)4 <(*E*C)8 RR (*U*R)2(*Q*R)2(*U*R)2(*Q*R)2 *R(*D*R)2(*Z*R)2(*D*R)2(*Z*R)2*R (N*H*)6 RR >(*U*R)6 <*R(*Z*R)8*R (R)8'},
 ];
 const m360=x=>((x%360)+360)%360;
 function buildLevel(w){
@@ -213,7 +214,8 @@ function buildLevel(w){
       T.travel=tr;tiles[i+1].t=T.t+tr/180*beat;
     }
   }
-  const n=tiles.length-1;
+  const n=tiles.length-1;let last=0;
+  for(let j=16;j<n-8;j++){const a=tiles[j-1],b=tiles[j];if(j-last>=16&&!b.tw&&!b.sp&&!a.tw&&!a.sp&&((a.travel>=90&&b.travel>=90)||j-last>=36)){b.cp=true;last=j}}
   return {tiles,segs,n,end:tiles[n].t};
 }
 /*ENDLEVELS*/
@@ -244,14 +246,14 @@ function chord(w,deg){const s=w.scale,n=k=>w.root+s[((k%7)+7)%7]+12*Math.floor(k
 
 /* music scheduler follows the level's tempo map */
 let M=null;
-function resetMusic(){M={t:0,step:0,seg:0,bar:-1,deg:0,gi:0}}
+function resetMusic(from,t){let seg=0;G.lvl.segs.forEach((g,i)=>{if(g.t<=t+1e-6)seg=i});M={t,step:0,seg,bar:-1,deg:0,gi:from+1}}
 function sched(){
   if(!AC||!G.lvl||!M)return;
   if(!['play','clear'].includes(G.state))return;
   const w=W[G.wi],L=G.lvl,horizon=AC.currentTime+.16,stopAt=L.end+COUNT*(60/w.bpm);
   while(G.startAt+M.t<horizon&&M.t<stopAt){
-    while(M.seg+1<L.segs.length&&L.segs[M.seg+1].t<=M.t+1e-6){M.seg++;M.t=L.segs[M.seg].t;M.step=0}
-    const beat=L.segs[M.seg].beat,at=G.startAt+M.t,s=M.step%16,intro=M.t<L.tiles[0].t-1e-4;
+    while(M.seg+1<L.segs.length&&L.segs[M.seg+1].t<=M.t+1e-6){M.seg++;if(L.segs[M.seg].t>M.t-1e-6){M.t=L.segs[M.seg].t;M.step=0}}
+    const beat=L.segs[M.seg].beat,at=G.startAt+M.t,s=M.step%16,intro=M.t<G.introEnd-1e-4;
     if(at>AC.currentTime-.01){
       if(s===0){M.bar++;M.deg=w.prog[M.bar%w.prog.length];if(!intro)pad(at,chord(w,M.deg).map(m=>mtof(m)),beat*4)}
       if(w.kick[s]==='x')kick(at);
@@ -273,7 +275,7 @@ function sched(){
 setInterval(sched,25);
 
 /* ---------------- state ---------------- */
-const PERF=.05,OKW=.105,MISS=.135;
+const PERF=.06,OKW=.13,MISS=.16;
 const SAVE='twin-orbit-v1';
 let saved={best:{},off:0,prac:false,auto:false};
 try{const s=JSON.parse(localStorage.getItem(SAVE)||'null');if(s)saved=Object.assign(saved,s)}catch(e){}
@@ -282,11 +284,15 @@ const G={state:'menu',wi:0,lvl:null,cur:0,startAt:0,st:null,fx:[],pops:[],trail:
 function songT(){if(!AC)return 0;const lat=(AC.outputLatency||AC.baseLatency||0);return AC.currentTime-G.startAt-lat-saved.off/1000}
 
 const $=id=>document.getElementById(id);
-function startLevel(wi){
+function lastCp(){let c=0;if(G.lvl)for(let j=1;j<=G.cur;j++)if(G.lvl.tiles[j].cp)c=j;return c}
+function startLevel(wi,from=0){
   initAudio();newBus();
-  G.wi=wi;G.lvl=buildLevel(W[wi]);G.cur=0;G.fx=[];G.pops=[];G.trail=[];G.parts=[];
-  G.st={p:0,e:0,l:0,m:0,tooEarly:0};G.cam={x:G.lvl.tiles[0].x+1.2,y:0};
-  G.startAt=AC.currentTime+.3;resetMusic();G.state='play';
+  if(!from||!G.lvl||G.wi!==wi){G.wi=wi;G.lvl=buildLevel(W[wi]);G.st={p:0,e:0,l:0,m:0,tooEarly:0};G.usedCp=false}
+  if(from)G.usedCp=true;
+  const tf=G.lvl.tiles[from],lead=COUNT*tf.beat;
+  G.cur=from;G.from=from;G.introEnd=tf.t;G.fx=[];G.pops=[];G.trail=[];G.parts=[];
+  G.cam={x:tf.x+.6,y:tf.y};
+  G.startAt=AC.currentTime+.3-(tf.t-lead);resetMusic(from,tf.t-lead);G.state='play';
   $('menu').hidden=true;$('result').hidden=true;$('hud').hidden=false;
   $('hudName').innerHTML=`<small>WORLD ${String(wi+1).padStart(2,'0')} · ${W[wi].bpm} BPM</small>`+W[wi].name;
   $('tag').textContent=saved.auto?'자동 재생 중':saved.prac?'연습 모드':'';
@@ -338,12 +344,15 @@ function showResult(ok){
   let note='';
   if(!ok)note=`${G.lvl.n}칸 중 ${G.cur}칸까지 갔어요. 박자가 계속 밀리면 메뉴의 싱크 보정을 조절해 보세요.`;
   else if(saved.auto)note='자동 재생 기록은 저장되지 않아요.';
+  else if(G.usedCp)note='체크포인트에서 이어서 깼어요. 처음부터 한 번에 깨면 기록이 저장돼요.';
   else if(saved.prac&&s.m>0)note=`연습 모드에서 ${s.m}번 놓쳤어요. 놓침 없이 끝내면 클리어로 기록돼요.`;
   else{const b=saved.best[G.wi];if(!b||a>b.acc){saved.best[G.wi]={acc:a,clear:true};persist();note='새 최고 기록이에요.'}else note=`최고 기록 ${b.acc.toFixed(2)}%`}
-  if(cleanClear&&!saved.best[G.wi]){saved.best[G.wi]={acc:a,clear:true};persist()}
+  if(cleanClear&&!G.usedCp&&!saved.best[G.wi]){saved.best[G.wi]={acc:a,clear:true};persist()}
   $('resNote').textContent=note;
+  const cp=ok?0:lastCp();$('bCp').hidden=!cp;$('bRetry').className=cp?'':'pri';
+  if(cp)$('bCp').textContent=`체크포인트부터 (${cp}칸)`;
   $('bNext').hidden=G.wi>=W.length-1;
-  $('bRetry').focus();
+  (cp?$('bCp'):$('bRetry')).focus();
 }
 
 /* ---------------- input ---------------- */
@@ -352,11 +361,13 @@ addEventListener('keydown',e=>{
   if(e.key==='Escape'){if(G.state!=='menu')toMenu();return}
   if(G.state==='play'){if(e.repeat||e.key==='Tab')return;e.preventDefault();press();return}
   if((G.state==='fail'||G.state==='clear')&&!$('result').hidden){
-    if(e.key==='r'||e.key==='R'||e.key===' '){e.preventDefault();startLevel(G.wi)}
+    if(e.key==='r'||e.key==='R'){e.preventDefault();startLevel(G.wi)}
+    else if(e.key===' '||e.key==='Enter'){e.preventDefault();const c=G.state==='fail'?lastCp():0;startLevel(G.wi,c)}
   }
 });
 $('quit').addEventListener('click',toMenu);
 $('bRetry').addEventListener('click',()=>startLevel(G.wi));
+$('bCp').addEventListener('click',()=>startLevel(G.wi,lastCp()));
 $('bNext').addEventListener('click',()=>startLevel(Math.min(W.length-1,G.wi+1)));
 $('bMenu').addEventListener('click',toMenu);
 const off=$('off'),offv=$('offv');
@@ -497,6 +508,8 @@ function drawLevel(w,T){
     if(t.tw){ctx.strokeStyle=w.c[0];ctx.lineWidth=Math.max(2,s*.045);const r=s*.16,ccw=!t.cw;
       ctx.beginPath();ctx.arc(x,y,r,Math.PI*.3,Math.PI*1.7);ctx.stroke();const ea=ccw?Math.PI*1.7:Math.PI*.3;ctx.fillStyle=w.c[0];ctx.beginPath();ctx.arc(x+Math.cos(ea)*r,y+Math.sin(ea)*r,s*.05,0,7);ctx.fill()}
     if(t.sp){ctx.fillStyle=w.c[0];ctx.font=`600 ${Math.round(s*.24)}px "IBM Plex Mono",monospace`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('×'+t.sp,x,y+1)}
+    if(t.cp){ctx.strokeStyle=w.c[0];ctx.lineWidth=Math.max(2,s*.035);ctx.beginPath();ctx.moveTo(x-s*.08,y+s*.16);ctx.lineTo(x-s*.08,y-s*.18);ctx.stroke();
+      ctx.fillStyle=j<=i?w.c[0]:w.c[3];ctx.beginPath();ctx.moveTo(x-s*.08,y-s*.18);ctx.lineTo(x+s*.16,y-s*.1);ctx.lineTo(x-s*.08,y-s*.02);ctx.closePath();ctx.fill()}
     if(j===i+1&&G.state==='play'){const pul=.5+.5*Math.sin(now/120);ctx.strokeStyle=hexA(w.c[3],.5+.45*pul);ctx.lineWidth=3*DPR;ctx.beginPath();ctx.arc(x,y,s*.3,0,7);ctx.stroke()}
   }
   ctx.globalAlpha=1;
@@ -552,7 +565,7 @@ function frame(){
   drawBg(w,T,pulse,G.cam);
   drawLevel(w,T);
   // countdown
-  const t0=L.tiles[0].t,b0=60/w.bpm,c=$('count');
+  const t0=L.tiles[G.from||0].t,b0=L.tiles[G.from||0].beat,c=$('count');
   if(G.state==='play'&&T<t0){const left=Math.ceil((t0-T)/b0);c.textContent=left<=3&&left>=1?left:'준비';}
   else if(G.state==='clear')c.textContent='클리어';
   else if(G.state==='fail')c.textContent='궤도 이탈';
