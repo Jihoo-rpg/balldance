@@ -112,9 +112,9 @@ button{font-family:inherit;color:inherit}
   padding-top:calc(12px + env(safe-area-inset-top,0px));padding-bottom:18px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
   background:linear-gradient(rgba(9,9,16,.92),rgba(9,9,16,0))}
 .ed-top input,.ed-top select{font:inherit;font-size:14px;color:var(--text);background:rgba(255,255,255,.07);border:1px solid var(--line);border-radius:8px;padding:7px 9px}
-.ed-top #edName{width:150px}.ed-top #edBpm{width:72px;font-family:var(--mono)}
+.ed-top #edName{width:120px}.ed-top #edBpm{width:72px;font-family:var(--mono)}
 .ed-top label{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted)}
-.ed-info{font-family:var(--mono);font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;flex:1;min-width:230px}
+.ed-info{font-family:var(--mono);font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;flex:1;min-width:180px}
 .ed-info.warn{color:#ff8a8a}
 .ed-bot{position:absolute;bottom:0;left:0;right:0;display:flex;flex-wrap:wrap;gap:14px 20px;justify-content:center;align-items:flex-end;
   padding-top:24px;padding-bottom:calc(14px + env(safe-area-inset-bottom,0px));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
@@ -201,7 +201,17 @@ button{font-family:inherit;color:inherit}
       <div class="row"><button type="button" class="eb mono" data-s="0.5">×0.5</button><button type="button" class="eb mono" data-s="1">×1</button><button type="button" class="eb mono" data-s="1.5">×1.5</button><button type="button" class="eb mono" data-s="2">×2</button></div></div>
     <div class="grp"><small>칸 선택</small>
       <div class="row"><button type="button" class="eb" id="edPrev" aria-label="이전 칸">‹</button><button type="button" class="eb" id="edNext" aria-label="다음 칸">›</button><button type="button" class="eb" id="edEnd">끝</button></div></div>
-    <div class="keys"><kbd>W A S D</kbd> 상하좌우 · <kbd>Q E Z C</kbd> 대각선 · <kbd>Shift</kbd>+대각선 = 60° · <kbd>T</kbd> 회전 반전 · <kbd>1</kbd>–<kbd>4</kbd> 속도 · <kbd>Backspace</kbd> 지우기 · <kbd>[ ]</kbd> 칸 선택 · <kbd>Enter</kbd> 테스트 · 칸을 눌러 선택, 끌어서 이동, 휠로 확대</div>
+    <div class="grp"><small>빠르게 만들기</small>
+      <div class="row"><button type="button" class="eb" id="edRec">● 리듬 녹음</button><label class="eb" for="edTrip" style="display:flex;align-items:center;gap:6px;font-size:13px"><input type="checkbox" id="edTrip"> 셋잇단</label><button type="button" class="eb" id="edUndo" aria-label="되돌리기">↶</button></div>
+      <div class="row">
+        <button type="button" class="eb mono" data-st="1,1,1,1">1 ×4</button>
+        <button type="button" class="eb mono" data-st=".5,.5,.5,.5,.5,.5,.5,.5">½ ×8</button>
+        <button type="button" class="eb mono" data-st=".25,.25,.25,.25,.25,.25,.25,.25">¼ ×8</button>
+        <button type="button" class="eb mono" data-st=".3333,.3333,.3333,.3333,.3333,.3333">⅓ ×6</button>
+        <button type="button" class="eb mono" data-st=".75,.25,.75,.25,.75,.25,.75,.25">¾¼ ×4</button>
+        <button type="button" class="eb mono" data-st="1.5,.5,1.5,.5">1½½ ×2</button>
+      </div></div>
+    <div class="keys"><kbd>W A S D</kbd> 상하좌우 · <kbd>Q E Z C</kbd> 대각선 · <kbd>Shift</kbd>+대각선 = 60° · <kbd>T</kbd> 회전 반전 · <kbd>1</kbd>–<kbd>4</kbd> 속도 · <kbd>Backspace</kbd> 지우기 · <kbd>[ ]</kbd> 칸 선택 · <kbd>Ctrl</kbd>+<kbd>Z</kbd> 되돌리기 · <kbd>R</kbd> 리듬 녹음 (녹음 중엔 아무 키나 탭) · <kbd>Enter</kbd> 테스트 · 칸을 눌러 선택, 끌어서 이동, 휠로 확대</div>
   </div>
   <div class="toast" id="edToast" hidden></div>
   <div class="sharebox" id="edShareBox" hidden>
@@ -236,7 +246,7 @@ button{font-family:inherit;color:inherit}
 
 <script>
 /*LEVELS*/
-const DIR={R:0,T:30,E:45,H:60,U:90,G:120,Q:135,L:180,Z:225,J:240,D:270,N:300,C:315};
+const DIR={R:0,a:15,T:30,E:45,H:60,b:75,U:90,c:105,G:120,Q:135,d:150,e:165,L:180,f:195,g:210,Z:225,J:240,h:255,D:270,i:285,N:300,j:330,C:315,k:345};
 const MAJ=[0,2,4,5,7,9,11],MIN=[0,2,3,5,7,8,10],DOR=[0,2,3,5,7,9,10],LYD=[0,2,4,6,7,9,11],MIXO=[0,2,4,5,7,9,10],PHRY=[0,1,3,5,7,8,10];
 const COUNT=4;
 // Pattern: direction letters; '*' = twirl (reverse spin) at that tile; '>' x2, '^' x1.5, '<' x1, '_' x0.5 speed from that tile.
@@ -391,6 +401,7 @@ function startLevel(wi,custom,auto){
 function retry(){startLevel(G.wi,G.custom?G.world:null,G.forceAuto)}
 function leave(){if(G.fromEditor)openEditor();else toMenu()}
 function toMenu(){
+  if(typeof REC!=='undefined'&&REC)recStop();
   if(AC&&BUS)newBus();
   G.state='menu';G.lvl=null;G.fromEditor=false;$('hud').hidden=true;$('result').hidden=true;$('editor').hidden=true;$('menu').hidden=false;
   document.documentElement.style.setProperty('--hot','#ffb15c');renderCards();
@@ -517,32 +528,74 @@ function edRefresh(){
 }
 function toast(msg){const t=$('edToast');t.textContent=msg;t.hidden=false;clearTimeout(toast.h);toast.h=setTimeout(()=>t.hidden=true,1600)}
 const opp=(a,b)=>Math.abs(m360(a-b)-180)<1e-6;
+function snap(){E.hist=E.hist||[];E.hist.push(JSON.stringify({t:E.toks,s:E.sel}));if(E.hist.length>200)E.hist.shift()}
+function edUndo(){if(!E.hist||!E.hist.length){toast('되돌릴 게 없어요');return}const h=JSON.parse(E.hist.pop());E.toks=h.t;E.sel=h.s;E.free=false;edRefresh()}
 function edAdd(d){
   const prev=E.sel===0?0:E.toks[E.sel-1].dir,next=E.toks[E.sel];
   if(opp(prev,d)||(next&&opp(d,next.dir))){toast('바로 반대 방향으로는 갈 수 없어요');return}
-  E.toks.splice(E.sel,0,{dir:d});E.sel++;E.free=false;edRefresh();
+  snap();E.toks.splice(E.sel,0,{dir:d});E.sel++;E.free=false;edRefresh();
   if(AC&&E.lvl){const g=E.lvl.tiles[E.sel].t-E.lvl.tiles[E.sel-1].t;initAudio();if(!BUS)newBus();tone(AC.currentTime,'triangle',g<.2?880:g<.4?660:523,.12,.12)}
 }
-function edDel(){if(E.sel===0)return;E.toks.splice(E.sel-1,1);E.sel--;E.free=false;edRefresh()}
-function edTw(){if(!E.sel)return;const t=E.toks[E.sel-1];t.tw=t.tw?undefined:1;edRefresh()}
-function edSp(v){if(!E.sel)return;const t=E.toks[E.sel-1];t.sp=t.sp===v?undefined:v;edRefresh()}
+
+/* auto path: place the next tile so it lands on the wanted rhythm */
+const angD=(a,b)=>{const d=m360(a-b);return d>180?360-d:d};
+function edAddTravel(tr){
+  tr=Math.round(tr/15)*15;if(tr<15)tr=15;if(tr>345)tr=345;
+  const L=E.lvl,k=E.sel,t=L.tiles[k],atEnd=k===E.toks.length,opts=[];
+  for(const tw of(k>0&&atEnd?[false,true]:[false])){
+    const cw=tw?!t.cw:t.cw,d=m360(cw?t.dir+180-tr:t.dir+180+tr);if(LET[d]===undefined)continue;
+    const r=d*Math.PI/180,nx=t.x+Math.cos(r),ny=t.y+Math.sin(r);
+    let hit=0;for(let j=Math.max(0,k-60);j<k;j++)if(Math.hypot(L.tiles[j].x-nx,L.tiles[j].y-ny)<.7)hit++;
+    const score=hit*400+angD(d,E.heading||0)+(tw?55:0)+(L.tiles[k].tw&&tw?40:0);
+    opts.push({tw,d,score});
+  }
+  if(!opts.length)return false;
+  opts.sort((a,b)=>a.score-b.score);const o=opts[0];
+  if(o.tw){const tk=E.toks[k-1];tk.tw=tk.tw?undefined:1}
+  E.toks.splice(k,0,{dir:o.d});E.sel++;E.free=false;edRefresh();return true;
+}
+function spAt(k){const L=E.lvl;return(60/E.bpm)/L.tiles[k].beat}
+function edStamp(gs){snap();for(const g of gs)edAddTravel(g*180*spAt(E.sel));if(AC){initAudio()}}
+let REC=null;
+function recToggle(){if(REC)recStop();else recStart()}
+function recStart(){
+  initAudio();newBus();const b=60/E.bpm,t0=AC.currentTime+.25;snap();
+  REC={t0,b,lastSnap:null,beat:0,timer:setInterval(()=>{while(REC&&REC.t0+REC.beat*REC.b<AC.currentTime+.15){const at=REC.t0+REC.beat*REC.b;tone(at,'square',REC.beat%4===0?1046:784,REC.beat<4?.08:.045,.05);REC.beat++}},25)};
+  $('edRec').classList.add('on');$('edRec').textContent='■ 녹음 멈추기';
+  toast('딸깍 4번 뒤 박자에 맞춰 아무 키나 탭하세요');
+}
+function recStop(){if(!REC)return;clearInterval(REC.timer);REC=null;$('edRec').classList.remove('on');$('edRec').textContent='● 리듬 녹음';if(BUS)newBus();toast('녹음을 멈췄어요')}
+function recTap(){
+  if(!REC)return;const lat=(AC.outputLatency||AC.baseLatency||0);const t=AC.currentTime-lat-saved.off/1000-REC.t0;
+  const pos=t/REC.b,trip=$('edTrip').checked;
+  const q4=Math.round(pos*4)/4,q3=Math.round(pos*3)/3;
+  const sn=trip&&Math.abs(q3-pos)<Math.abs(q4-pos)-.02?q3:q4;
+  if(REC.lastSnap===null){REC.lastSnap=sn;hitSound();return}
+  const g=sn-REC.lastSnap;if(g<.2)return;
+  if(g>1.95){REC.lastSnap=sn;toast('쉼이 길어서 여기부터 다시 이어요');return}
+  REC.lastSnap=sn;hitSound();edAddTravel(g*180*spAt(E.sel));
+}
+function edDel(){if(E.sel===0)return;snap();E.toks.splice(E.sel-1,1);E.sel--;E.free=false;edRefresh()}
+function edTw(){if(!E.sel)return;snap();const t=E.toks[E.sel-1];t.tw=t.tw?undefined:1;edRefresh()}
+function edSp(v){if(!E.sel)return;snap();const t=E.toks[E.sel-1];t.sp=t.sp===v?undefined:v;edRefresh()}
 function edSel(i){E.sel=Math.max(0,Math.min(E.toks.length,i));E.free=false;edRefresh()}
 function edSave(quiet){
   const m=edMap();E.name=m.name;saved.maps=saved.maps||[];const k=saved.maps.findIndex(x=>x.id===m.id);
   if(k>=0)saved.maps[k]=m;else saved.maps.unshift(m);persist();if(!quiet)toast('저장했어요');
 }
-function edTest(auto){if(!E.toks.length){toast('칸을 하나 이상 놓아 주세요');return}E.name=edMap().name;startLevel(-1,mapWorld(edMap()),auto)}
+function edTest(auto){if(REC)recStop();if(!E.toks.length){toast('칸을 하나 이상 놓아 주세요');return}E.name=edMap().name;startLevel(-1,mapWorld(edMap()),auto)}
 function encodeMap(m){return'BD1:'+btoa(unescape(encodeURIComponent(JSON.stringify({n:m.name,b:m.bpm,s:m.style,p:m.pat}))))}
 function decodeMap(code){
   const raw=code.trim().replace(/^BD1:/,'');const o=JSON.parse(decodeURIComponent(escape(atob(raw))));
-  if(typeof o.p!=='string'||!/^[RTEHUGQLZJDNC*>^<_()0-9 ]*$/.test(o.p))throw 0;
+  if(typeof o.p!=='string'||!/^[RTEHUGQLZJDNCa-k*>^<_()0-9 ]*$/.test(o.p))throw 0;
   const b=Math.round(+o.b);if(!(b>=40&&b<=300))throw 0;
   return{name:String(o.n||'받은 맵').slice(0,24),bpm:b,style:Math.max(0,Math.min(11,o.s|0)),pat:o.p};
 }
 $('edStyle').innerHTML=W.map((w,i)=>`<option value="${i}">${w.name}</option>`).join('');
 document.querySelectorAll('#editor [data-d]').forEach(el=>el.addEventListener('click',()=>edAdd(+el.dataset.d)));
 document.querySelectorAll('#editor [data-s]').forEach(el=>el.addEventListener('click',()=>edSp(+el.dataset.s)));
-$('edDel').onclick=edDel;$('edTw').onclick=edTw;
+$('edDel').onclick=edDel;$('edRec').onclick=recToggle;$('edUndo').onclick=edUndo;
+document.querySelectorAll('#editor [data-st]').forEach(el=>el.addEventListener('click',()=>edStamp(el.dataset.st.split(',').map(Number))));$('edTw').onclick=edTw;
 $('edPrev').onclick=()=>edSel(E.sel-1);$('edNext').onclick=()=>edSel(E.sel+1);$('edEnd').onclick=()=>edSel(E.toks.length);
 $('edBack').onclick=toMenu;$('edSave').onclick=()=>edSave();$('edTest').onclick=()=>edTest(false);$('edAuto').onclick=()=>edTest(true);
 $('edName').addEventListener('input',()=>{E.name=$('edName').value});
@@ -556,6 +609,7 @@ $('edImport').onclick=()=>{try{const m=decodeMap($('edCode').value);openEditor(O
 const KEYDIR={KeyD:0,ArrowRight:0,KeyW:90,ArrowUp:90,KeyA:180,ArrowLeft:180,KeyS:270,ArrowDown:270,KeyE:45,KeyQ:135,KeyZ:225,KeyC:315};
 const SHIFTDIR={KeyE:60,KeyQ:120,KeyZ:240,KeyC:300};
 function edKey(e){
+  if(REC&&!['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName)){if(e.repeat)return;e.preventDefault();if(e.code==='Escape'||e.code==='KeyR')recStop();else recTap();return}
   const tg=e.target.tagName;if(tg==='INPUT'||tg==='TEXTAREA'||tg==='SELECT'){if(e.key==='Escape')e.target.blur();return}
   if(!$('edShareBox').hidden){if(e.key==='Escape')$('edShareBox').hidden=true;return}
   const c=e.code;
@@ -563,6 +617,8 @@ function edKey(e){
   if(KEYDIR[c]!==undefined&&!e.ctrlKey&&!e.metaKey){e.preventDefault();edAdd(KEYDIR[c]);return}
   if(c==='Backspace'||c==='Delete'){e.preventDefault();edDel()}
   else if(c==='KeyT')edTw();
+  else if(c==='KeyR')recStart();
+  else if((e.ctrlKey||e.metaKey)&&c==='KeyZ'){e.preventDefault();edUndo()}
   else if(c==='Digit1')edSp(.5);else if(c==='Digit2')edSp(1);else if(c==='Digit3')edSp(1.5);else if(c==='Digit4')edSp(2);
   else if(c==='BracketLeft')edSel(E.sel-1);else if(c==='BracketRight')edSel(E.sel+1);
   else if(c==='Home')edSel(0);else if(c==='End')edSel(E.toks.length);
@@ -572,6 +628,7 @@ function edKey(e){
 }
 function edScale(){return Math.min(cv.width,cv.height)/(cv.width<cv.height?5.6:7.4)*E.zoom}
 function edDown(e){
+  if(REC){recTap();return}
   const sx=e.clientX,sy=e.clientY,cam={...E.cam};let moved=false;
   const mv=ev=>{const dx=(ev.clientX-sx)*DPR,dy=(ev.clientY-sy)*DPR;if(Math.abs(dx)+Math.abs(dy)>6*DPR)moved=true;if(moved){const s=edScale();E.free=true;E.cam={x:cam.x-dx/s,y:cam.y+dy/s}}};
   const up=ev=>{removeEventListener('pointermove',mv);removeEventListener('pointerup',up);
