@@ -128,7 +128,7 @@ button{font-family:inherit;color:inherit}
 .eb.on{background:var(--hot);color:#1a1206;border-color:transparent}
 .eb:disabled{opacity:.35;cursor:default}
 .eb.mono{font-family:var(--mono);font-size:13px}
-.spd{max-width:300px}.eb.sp{min-width:44px;height:34px;padding:0 6px;font-size:12px}
+.eb.spin{display:flex;align-items:center;gap:4px;font-size:13px;cursor:text}.eb.spin input{width:72px;font:600 14px var(--mono);color:var(--text);background:rgba(0,0,0,.3);border:1px solid var(--line);border-radius:6px;padding:5px 6px}
 .keys{width:100%;text-align:center;font-size:11px;color:var(--muted);line-height:1.6}
 .keys kbd{font-family:var(--mono);border:1px solid var(--line);border-radius:4px;padding:0 4px}
 .toast{position:absolute;left:50%;top:calc(96px + env(safe-area-inset-top,0px));transform:translateX(-50%);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:8px 16px;font-size:14px;pointer-events:none;white-space:nowrap}
@@ -179,7 +179,7 @@ button{font-family:inherit;color:inherit}
   <div class="ed-top">
     <button type="button" class="btn" id="edBack">나가기</button>
     <input id="edName" maxlength="24" aria-label="맵 이름">
-    <label for="edBpm">BPM <input id="edBpm" type="number" min="40" max="300" step="1"></label>
+    <label for="edBpm">BPM <input id="edBpm" type="number" min="1" step="any" inputmode="decimal"></label>
     <label for="edStyle">스타일 <select id="edStyle"></select></label>
     <span class="ed-info" id="edInfo"></span>
     <button type="button" class="btn" id="edShare">공유 코드</button>
@@ -199,7 +199,7 @@ button{font-family:inherit;color:inherit}
       <div class="row"><button type="button" class="eb" data-d="240">↙<small>240</small></button><button type="button" class="eb" data-d="300">↘<small>300</small></button></div></div>
     <div class="grp"><small>선택한 칸</small>
       <div class="row"><button type="button" class="eb" id="edTw">회전 반전</button></div>
-      <div class="row spd"><button type="button" class="eb mono sp" data-s="0.5">×0.5</button><button type="button" class="eb mono sp" data-s="1">×1</button><button type="button" class="eb mono sp" data-s="1.5">×1.5</button><button type="button" class="eb mono sp" data-s="2">×2</button><button type="button" class="eb mono sp" data-s="3">×3</button><button type="button" class="eb mono sp" data-s="4">×4</button><button type="button" class="eb mono sp" data-s="5">×5</button><button type="button" class="eb mono sp" data-s="6">×6</button><button type="button" class="eb mono sp" data-s="7">×7</button><button type="button" class="eb mono sp" data-s="8">×8</button><button type="button" class="eb mono sp" data-s="9">×9</button><button type="button" class="eb mono sp" data-s="10">×10</button></div></div>
+      <div class="row"><label class="eb spin" for="edSpd">배속 ×<input id="edSpd" type="number" min="0" step="any" inputmode="decimal" placeholder="1"></label><button type="button" class="eb mono" id="edSpClr">원래대로</button></div></div>
     <div class="grp"><small>칸 선택</small>
       <div class="row"><button type="button" class="eb" id="edPrev" aria-label="이전 칸">‹</button><button type="button" class="eb" id="edNext" aria-label="다음 칸">›</button><button type="button" class="eb" id="edEnd">끝</button></div></div>
     <div class="grp"><small>빠르게 만들기</small>
@@ -212,7 +212,7 @@ button{font-family:inherit;color:inherit}
         <button type="button" class="eb mono" data-st=".75,.25,.75,.25,.75,.25,.75,.25">¾¼ ×4</button>
         <button type="button" class="eb mono" data-st="1.5,.5,1.5,.5">1½½ ×2</button>
       </div></div>
-    <div class="keys"><kbd>W A S D</kbd> 상하좌우 · <kbd>Q E Z C</kbd> 대각선 · <kbd>Shift</kbd>+대각선 = 60° · <kbd>T</kbd> 회전 반전 · <kbd>1</kbd>–<kbd>0</kbd> 속도(×0.5~×10) · <kbd>Backspace</kbd> 지우기 · <kbd>[ ]</kbd> 칸 선택 · <kbd>Ctrl</kbd>+<kbd>Z</kbd> 되돌리기 · <kbd>R</kbd> 리듬 녹음 (녹음 중엔 아무 키나 탭) · <kbd>Enter</kbd> 테스트 · 칸을 눌러 선택, 끌어서 이동, 휠로 확대</div>
+    <div class="keys"><kbd>W A S D</kbd> 상하좌우 · <kbd>Q E Z C</kbd> 대각선 · <kbd>Shift</kbd>+대각선 = 60° · <kbd>T</kbd> 회전 반전 · <kbd>X</kbd> 배속 직접 입력 · <kbd>1</kbd>–<kbd>0</kbd> 배속 빠른 선택 · <kbd>Backspace</kbd> 지우기 · <kbd>[ ]</kbd> 칸 선택 · <kbd>Ctrl</kbd>+<kbd>Z</kbd> 되돌리기 · <kbd>R</kbd> 리듬 녹음 (녹음 중엔 아무 키나 탭) · <kbd>Enter</kbd> 테스트 · 칸을 눌러 선택, 끌어서 이동, 휠로 확대</div>
   </div>
   <div class="toast" id="edToast" hidden></div>
   <div class="sharebox" id="edShareBox" hidden>
@@ -525,7 +525,7 @@ function edRefresh(){
   
   const t=E.sel>0?E.toks[E.sel-1]:null;
   $('edTw').disabled=!t;$('edTw').classList.toggle('on',!!(t&&t.tw));
-  document.querySelectorAll('#editor [data-s]').forEach(el=>{el.disabled=!t;el.classList.toggle('on',!!(t&&t.sp===+el.dataset.s))});
+  const si=$('edSpd');si.disabled=!t;$('edSpClr').disabled=!t||!t.sp;if(document.activeElement!==si)si.value=t&&t.sp?t.sp:'';
   $('edDel').disabled=E.sel===0;
 }
 function toast(msg){const t=$('edToast');t.textContent=msg;t.hidden=false;clearTimeout(toast.h);toast.h=setTimeout(()=>t.hidden=true,1600)}
@@ -580,6 +580,7 @@ function recTap(){
 function edDel(){if(E.sel===0)return;snap();E.toks.splice(E.sel-1,1);E.sel--;E.free=false;edRefresh()}
 function edTw(){if(!E.sel)return;snap();const t=E.toks[E.sel-1];t.tw=t.tw?undefined:1;edRefresh()}
 function edSp(v){if(!E.sel)return;snap();const t=E.toks[E.sel-1];t.sp=t.sp===v?undefined:v;edRefresh()}
+function edSpFocus(){if(!E.sel){toast('먼저 칸을 골라 주세요');return}$('edSpd').focus();$('edSpd').select()}
 function edSel(i){E.sel=Math.max(0,Math.min(E.toks.length,i));E.free=false;edRefresh()}
 function edSave(quiet){
   const m=edMap();E.name=m.name;saved.maps=saved.maps||[];const k=saved.maps.findIndex(x=>x.id===m.id);
@@ -590,18 +591,23 @@ function encodeMap(m){return'BD1:'+btoa(unescape(encodeURIComponent(JSON.stringi
 function decodeMap(code){
   const raw=code.trim().replace(/^BD1:/,'');const o=JSON.parse(decodeURIComponent(escape(atob(raw))));
   if(typeof o.p!=='string'||!/^[RTEHUGQLZJDNCa-k*>^<_()0-9{}. ]*$/.test(o.p))throw 0;
-  const b=Math.round(+o.b);if(!(b>=40&&b<=300))throw 0;
+  const b=+o.b;if(!(b>0&&isFinite(b)))throw 0;
   return{name:String(o.n||'받은 맵').slice(0,24),bpm:b,style:Math.max(0,Math.min(11,o.s|0)),pat:o.p};
 }
 $('edStyle').innerHTML=W.map((w,i)=>`<option value="${i}">${w.name}</option>`).join('');
 document.querySelectorAll('#editor [data-d]').forEach(el=>el.addEventListener('click',()=>edAdd(+el.dataset.d)));
-document.querySelectorAll('#editor [data-s]').forEach(el=>el.addEventListener('click',()=>edSp(+el.dataset.s)));
+$('edSpd').addEventListener('change',()=>{if(!E.sel)return;const raw=$('edSpd').value.trim(),t=E.toks[E.sel-1];
+  if(raw===''){if(t.sp){snap();t.sp=undefined}edRefresh();return}
+  const v=parseFloat(raw);if(!(v>0&&isFinite(v))){toast('0보다 큰 숫자를 넣어 주세요');edRefresh();return}
+  snap();t.sp=v;edRefresh();$('edSpd').blur()});
+$('edSpd').addEventListener('keydown',e=>{if(e.key==='Enter')$('edSpd').blur()});
+$('edSpClr').onclick=()=>{if(!E.sel)return;const t=E.toks[E.sel-1];if(t.sp){snap();t.sp=undefined;edRefresh()}};
 $('edDel').onclick=edDel;$('edRec').onclick=recToggle;$('edUndo').onclick=edUndo;
 document.querySelectorAll('#editor [data-st]').forEach(el=>el.addEventListener('click',()=>edStamp(el.dataset.st.split(',').map(Number))));$('edTw').onclick=edTw;
 $('edPrev').onclick=()=>edSel(E.sel-1);$('edNext').onclick=()=>edSel(E.sel+1);$('edEnd').onclick=()=>edSel(E.toks.length);
 $('edBack').onclick=toMenu;$('edSave').onclick=()=>edSave();$('edTest').onclick=()=>edTest(false);$('edAuto').onclick=()=>edTest(true);
 $('edName').addEventListener('input',()=>{E.name=$('edName').value});
-$('edBpm').addEventListener('change',()=>{const v=Math.round(+$('edBpm').value);if(v>=40&&v<=300){E.bpm=v;edRefresh()}else{$('edBpm').value=E.bpm;toast('BPM은 40에서 300 사이로 정해 주세요')}});
+$('edBpm').addEventListener('change',()=>{const v=+$('edBpm').value;if(v>0&&isFinite(v)){E.bpm=v;edRefresh()}else{$('edBpm').value=E.bpm;toast('BPM은 0보다 큰 숫자로 넣어 주세요')}});
 $('edStyle').addEventListener('change',()=>{E.style=+$('edStyle').value;document.documentElement.style.setProperty('--hot',W[E.style].c[3]);edRefresh()});
 $('edShare').onclick=()=>{$('edCode').value=encodeMap(edMap());$('edShareBox').hidden=false;$('edCode').focus();$('edCode').select()};
 $('edClose').onclick=()=>{$('edShareBox').hidden=true};
@@ -619,6 +625,7 @@ function edKey(e){
   if(KEYDIR[c]!==undefined&&!e.ctrlKey&&!e.metaKey){e.preventDefault();edAdd(KEYDIR[c]);return}
   if(c==='Backspace'||c==='Delete'){e.preventDefault();edDel()}
   else if(c==='KeyT')edTw();
+  else if(c==='KeyX'){e.preventDefault();edSpFocus()}
   else if(c==='KeyR')recStart();
   else if((e.ctrlKey||e.metaKey)&&c==='KeyZ'){e.preventDefault();edUndo()}
   else if(c==='Digit1')edSp(.5);else if(c==='Digit2')edSp(1);else if(c==='Digit3')edSp(1.5);else if(c==='Digit4')edSp(2);else if(c==='Digit5')edSp(3);else if(c==='Digit6')edSp(4);else if(c==='Digit7')edSp(5);else if(c==='Digit8')edSp(6);else if(c==='Digit9')edSp(8);else if(c==='Digit0')edSp(10);
